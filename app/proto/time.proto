@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package my.service.timeservice;
+
+
+service TimeService {
+    rpc GetTime(GetTimeRequest) returns (GetTimeResponse) {}
+}
+
+
+message GetTimeRequest {}
+message GetTimeResponse {
+    int64 time = 1;
+}

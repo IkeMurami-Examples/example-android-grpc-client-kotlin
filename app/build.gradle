@@ -1,0 +1,108 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'com.google.protobuf'
+}
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "com.zfr.grpc"
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
+
+    sourceSets {
+        main {
+
+            java {
+                srcDir 'src/main/kotlin'
+            }
+
+            proto {
+                srcDir 'proto'
+            }
+
+        }
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+
+
+    // gRPC
+    implementation "io.grpc:grpc-okhttp:${rootProject.ext["grpcVersion"]}"
+    implementation "io.grpc:grpc-protobuf-lite:$grpcVersion"
+    implementation "io.grpc:grpc-stub:$grpcVersion"
+    implementation "io.grpc:grpc-core:$grpcVersion"
+
+    // Multidex
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    // Kotlin Coroutines - create не блокирующих запросов
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+
+    // ??
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.11.0'
+    }
+    plugins {
+        javalite {
+            artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
+        }
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.30.0"
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins{
+                java { option 'lite' }
+            }
+            task.plugins {
+                // javalite {}
+                grpc {
+                    // Options added to --grpc_out
+                    option 'lite'
+                }
+            }
+        }
+    }
+}
