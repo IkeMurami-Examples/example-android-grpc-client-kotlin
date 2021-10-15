@@ -1,4 +1,4 @@
-# An Android App implement a gRPC client.
+# An Android app implement a gRPC client.
 
 ```
 $ ./gradlew build
